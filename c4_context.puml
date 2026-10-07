@@ -5,11 +5,11 @@ top to bottom direction
 
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
-Person(user, "Пользователь", "Пользователь, взаимодействующий с датчиком")
+Person(user, "Пользователь", "Клиент")
 
-System(MainSystem, "Монолит", "Система управления взаимодействия с датчиками отопления")
-SystemQueue(Sensor, "Датчик", "Датчик управления отоплением")
+System(MainSystem, "Монолит", "Управление взаимодействием с датчиками")
+SystemQueue(Sensor, "Датчик", "Замер температуры")
 
-Rel(user, Sensor, "Взаимодействие с датчиком")
+Rel(user, MainSystem, "Регулирование температуры")
 Rel(Sensor, MainSystem, "Обработка команд")
 @enduml

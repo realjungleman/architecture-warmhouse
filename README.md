@@ -13,43 +13,31 @@
 ### 1. Описание функциональности монолитного приложения
 
 **Управление отоплением:**
-
 - Пользователи могут удалённо включать/выключать отопление в своих домах
 - Система поддерживает управление отопление запросом к датчику
 
 **Мониторинг температуры:**
-
 - Пользователи могут проверять температуру
 - Система поддерживает отображение температуры
 
 ### 2. Анализ архитектуры монолитного приложения
 Монолитное приложение, язык Go, СУБД PostgreSQL. Обращение из app-уровня в db-уровень синхронное
+
 ### 3. Определение доменов и границы контекстов
-- Сервер системы на Go (управляет взаимодействием с датчиками - подключение, проверка температуры, включение/выключение отопления)
-- СУБД PostgreSQL (сохраняет данные о датчиках и их текущих метриках)
+- Монолитная система (управляет взаимодействием с датчиками - подключение, проверка температуры, включение/выключение отопления)
+- Пользователь (посылает запросы на регулирование температуры и отображение текущей температуры)
 - Датчик (отвечает на запросы сервера, выставляет по команде сервера температуру)
 
 
 ### **4. Проблемы монолитного решения**
-- Ручное подключение системы отопления к системе, необходимость выезда мастера -оплата его работы, потеря времени и лояльности клиентов
+- Ручное подключение системы отопления к системе, необходимость выезда мастера - оплата его работы, потеря времени и лояльности клиентов
 - Синхронное однопоточное взаимодействие системы с СУБД, одна поломка заденет все последующие
-- Получение данных о температуры через посредника - сетевые издержки, отсутствие сети рушит смысл решения
+- Получение данных о температуры через посредника - сетевые издержки, отсутствие соединения рушит смысл решения
+- Сложность в масштабировании
 
-### 5. Визуализация контекста системы — диаграмма С4
+### 5. Визуализация контекста системы - диаграмма С4
 
-Добавьте сюда диаграмму контекста в модели C4.
-
-Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
-
-```markdown
-[Текст ссылки](URL)
-```
-
-Замените `Текст ссылки` текстом, который хотите использовать для ссылки. Вместо `URL` вставьте адрес, на который должна вести ссылка. Например:
-
-```markdown
-[Посетите Яндекс](https://ya.ru/)
-```
+[![C4_context](//www.plantuml.com/plantuml/png/TL7DojD05DtFKunTLT1cqvMhGhTMQejhIPF13YGpONA3k4ljmaLT2eA8F_e2wKzfciRs5UwyaNScYiZ7HsbcxfbppZrtPfH3QA184mOI4i7n1nxnXXUxmJF70rwn7N3yFdJx6YlSsvA-BVqgZWqT_x9lIT7O5QqLOw0p3felD81EUIoDY41gnTW3gQAaY4LX4hu4oF8dGM32ruDN4fR5eiY5YRG2eM0GwJIOoIWqiNucHIQIO3nyF4r21IycJuCqp44OWbwETPffvHIPoy-cmkHQzPtL8zx3hnJkOj_ZYTOTLZucrJrtzWalM5DDuNiF6Pk_8S-qFmcbwhQEyzaDHtzY4iiXF_7cfzyHHbhdmAau4LHZIzG3mMT_4pjlttAxueHIS_kEaCPVNKqjkpRF2r68_boeNFl87_unVSEFdd-q9VVfMxovmfFMjhGRbtqcaZyZ_n__6mdsTktZbzqLT97lzV9MFimTio-uzPDlyKhgvk_RjzxpGDAHK34zmcy0"test")](//www.plantuml.com/plantuml/png/TL7DojD05DtFKunTLT1cqvMhGhTMQejhIPF13YGpONA3k4ljmaLT2eA8F_e2wKzfciRs5UwyaNScYiZ7HsbcxfbppZrtPfH3QA184mOI4i7n1nxnXXUxmJF70rwn7N3yFdJx6YlSsvA-BVqgZWqT_x9lIT7O5QqLOw0p3felD81EUIoDY41gnTW3gQAaY4LX4hu4oF8dGM32ruDN4fR5eiY5YRG2eM0GwJIOoIWqiNucHIQIO3nyF4r21IycJuCqp44OWbwETPffvHIPoy-cmkHQzPtL8zx3hnJkOj_ZYTOTLZucrJrtzWalM5DDuNiF6Pk_8S-qFmcbwhQEyzaDHtzY4iiXF_7cfzyHHbhdmAau4LHZIzG3mMT_4pjlttAxueHIS_kEaCPVNKqjkpRF2r68_boeNFl87_unVSEFdd-q9VVfMxovmfFMjhGRbtqcaZyZ_n__6mdsTktZbzqLT97lzV9MFimTio-uzPDlyKhgvk_RjzxpGDAHK34zmcy0)
 
 # Задание 2. Проектирование микросервисной архитектуры
 
