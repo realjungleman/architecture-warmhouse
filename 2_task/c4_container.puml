@@ -1,0 +1,43 @@
+@startuml
+title Теплый дом. С4 уровень контейнеров
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Клиент")
+System(SmartHouse, "Система управления умным домом", "")
+
+Container_Boundary(SmartHouse, "Система управления умным домом") {
+  Container(WebApp, "Веб-приложение", "Python, Django", "Веб-интерфейс")
+  Container(MobileApp, "Мобильное приложение", "Kotlin, Swift", "Мобайл-интерфейс")
+  Container(MainSystem, "Основной бэкенд", "Java", "Управляет системой умного дома")
+  Container(ApiGate, "Шлюз обработки данных", "Java", "Принимает и стандартизирует данные")
+  ContainerDb(Database, "СУБД", "PostgreSQL", "Хранит профили, привязанные устройства, телеметрию")
+  Container(VideoStreaming, "Видео сервер", "Python", "Управляет видеокамерой")
+  ContainerDb(S3, "Хранилище данных видеокамер", "S3", "Хранит видео и фото")
+  ContainerQueue(Queue, "Очередь сообщений", "Kafka", "Обрабатывает сообщения датчиков")
+}
+
+Container_Ext(temperatureSensor, "Датчик температуры", "Регулирование температуры")
+
+Container_Ext(gateSensor,"Датчик ворот", "Подъем/закрытие ворот")
+Container_Ext(videoCamera,"Видеокамера", "Включение/запись/выключение")
+Container_Ext(lightSensor,"Датчик света", "Включение/отключение света")
+
+Rel(user, WebApp, "https")
+Rel(user, MobileApp, "https")
+Rel(WebApp, MainSystem, "https")
+Rel(MobileApp, MainSystem, "https")
+Rel(MainSystem, Queue, "TCP/TLS")
+Rel(Queue, ApiGate, "TCP")
+Rel(MainSystem, VideoStreaming, "TCP/TLS")
+Rel(VideoStreaming, S3, "HTTP/HTTPS")
+Rel(MainSystem, Database, "TCP/TLS")
+
+Rel(VideoStreaming, videoCamera, "http")
+Rel(ApiGate, gateSensor, "http")
+Rel(ApiGate, temperatureSensor, "http")
+Rel(ApiGate, lightSensor, "http")
+
+@enduml
