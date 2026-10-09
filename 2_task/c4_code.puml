@@ -6,7 +6,7 @@ top to bottom direction
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
 class Camera {
-  +String uuid
+  +Number id
   +String serialNumber
   +String model
   +String location
@@ -24,8 +24,8 @@ class Camera {
 }
 
 class VideoFile {
-  +String uuid
-  +String cameraUuid
+  +Number id
+  +Number cameraId
   +Date startDate
   +Date endDate
   +String location
@@ -37,8 +37,8 @@ class VideoFile {
 }
 
 class PhotoFile {
-  +String uuid
-  +String cameraUuid
+  +Number id
+  +Number cameraId
   +Date created
   +String location
   +Boolean isDeleted

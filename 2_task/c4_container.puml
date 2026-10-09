@@ -45,4 +45,5 @@ System(house, "Дом", "Место установки")
 Rel(gateSensor, house, "")
 Rel(temperatureSensor, house, "")
 Rel(lightSensor, house, "")
+Rel(videoCamera, house, "")
 @enduml

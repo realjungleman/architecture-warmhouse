@@ -1,0 +1,51 @@
+@startuml
+title Теплый дом. Логическая модель данных
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+entity User {
+  +Number id
+  +String name
+  +String email
+  +String passwordHash
+  +Boolean isActive
+  +Boolean isDeleted
+}
+
+entity House {
+  +Number id
+  +String name
+  +String location
+  +Boolean isActive
+}
+
+entity DeviceType {
+  +Number id
+  +String name
+}
+
+entity Device {
+  +Number id
+  +Number typeId
+  +String serialNumber
+  +Date activatedDate
+  +Date deactivatedDate
+  +Number houseId
+  +Boolean isActive
+}
+
+entity DeviceMessage {
+  +String uuid
+  +Number deviceId
+  +String messageType
+  +Date createdDate
+  +Json messageBody
+  +Boolean isProcessed
+}
+User "0..*" -- "0..*" House : N:N
+House "1" -- "0..*" Device : 1:N
+Device "1" -- "0..*" DeviceMessage : 1:N
+DeviceType "1" -- "0..*" Device : 1:N
+@enduml
