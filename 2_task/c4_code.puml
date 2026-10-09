@@ -1,0 +1,52 @@
+@startuml
+title Теплый дом. С4 уровень кода MainSystemCameraController
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class Camera {
+  +String uuid
+  +String serialNumber
+  +String model
+  +String location
+  +String osVersion
+  +String protocol
+  +Boolean isOnline
+  +Boolean hasRecording
+  +Boolean isRecording
+  +String videoDir
+  +void powerOn()
+  +void powerOff()
+  +void enableRecording()
+  +void disableRecording()
+  +void takePhoto()
+}
+
+class VideoFile {
+  +String uuid
+  +String cameraUuid
+  +Date startDate
+  +Date endDate
+  +String location
+  +Boolean isDeleted
+  +void start()
+  +void stop()
+  +String getLocation()
+  +void delete()
+}
+
+class PhotoFile {
+  +String uuid
+  +String cameraUuid
+  +Date created
+  +String location
+  +Boolean isDeleted
+  +String getLocation()
+  +void delete()
+}
+
+Camera "1" -- "0..*" VideoFile : has
+Camera "1" -- "0..*" PhotoFile : has
+
+@enduml
