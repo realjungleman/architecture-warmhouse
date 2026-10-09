@@ -28,7 +28,7 @@ Container_Boundary(SmartHouse, "Система управления умным �
     Component(SensorAPIController, "Модуль взаимодействия с датчиками", "Go", "Стандартизирует взаимодействие с датчиками")
     Component(SensorSecurityGateway, "Модуль сетевой безопасности", "Go", "Организует безопасное взаимодействие")
   }
-  ContainerDb(Database, "СУБД", "PostgreSQL", "Хранит профили, привязанные устройства, телеметрию")
+  ContainerDb(Database, "СУБД", "MongoDB", "Хранит профили, привязанные устройства, телеметрию")
   Container(VideoStreaming, "Видео-сервер", "Python", "Взаимодействует с видекамерами и медиафайлами"){
     Component(CameraAPIController, "Модуль взаимодействия с камерами", "Go", "Стандартизирует взаимодействие с камерами")
     Component(CameraSavingController, "Модуль медиафайлов", "Go", "Организует доступ к записанным видео, фото")
