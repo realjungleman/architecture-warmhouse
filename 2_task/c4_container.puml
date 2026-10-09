@@ -11,10 +11,10 @@ System(SmartHouse, "Система управления умным домом", 
 Container_Boundary(SmartHouse, "Система управления умным домом") {
   Container(WebApp, "Веб-приложение", "Python, Django", "Веб-интерфейс")
   Container(MobileApp, "Мобильное приложение", "Kotlin, Swift", "Мобайл-интерфейс")
-  Container(MainSystem, "Основной бэкенд", "Java", "Управляет системой умного дома")
-  Container(ApiGate, "Шлюз взаимодействия с датчиками", "Java", "Принимает и стандартизирует данные")
+  Container(MainSystem, "Основной бэкенд", "Go", "Управляет системой умного дома")
+  Container(ApiGate, "Шлюз взаимодействия с датчиками", "Go", "Управляет сообщениями датчиков")
   ContainerDb(Database, "СУБД", "PostgreSQL", "Хранит профили, привязанные устройства, телеметрию")
-  Container(VideoStreaming, "Видео сервер", "Python", "Управляет видеокамерой")
+  Container(VideoStreaming, "Видео-сервер", "Python", "Управляет видеокамерой")
   ContainerDb(S3, "Хранилище данных видеокамер", "S3", "Хранит видео и фото")
   ContainerQueue(Queue, "Очередь сообщений", "Kafka", "Обрабатывает сообщения датчиков")
 }

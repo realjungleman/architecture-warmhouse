@@ -1,0 +1,82 @@
+@startuml
+title Теплый дом. С4 уровень компонентов
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Клиент")
+System(SmartHouse, "Система управления умным домом")
+
+Container_Boundary(SmartHouse, "Система управления умным домом") {
+  Container(WebApp, "Веб-приложение", "Python, Django", "Веб-интерфейс")
+  Container(MobileApp, "Мобильное приложение", "Kotlin, Swift", "Мобайл-интерфейс")
+
+  Container(MainSystem, "Основной бэкенд", "Go", "Управляет системой умного дома"){
+   ComponentQueue(MainSystemAppsController, "Шлюз взаимодействия с приложениями", "Go", "Обрабатывает запросы")
+   Component_Ext(MainSystemMainController, "Основной модуль", "Go", "Маршрутизирует запросы между модулями")
+   Component(MainSystemUserController, "Модуль работы с пользователями", "Go", "Создает, валидирует, редактирует пользователей и их доступы")
+   ComponentDb(MainSystemDBController, "Модуль работы с СУБД", "Go", "Инкапсулирует команды")
+   Component(MainSystemSensorController, "Обработчик сообщений датчиков", "Go", "Отсылает/принимает сообщения датчиков")
+   Component(MainSystemSensorRegistrator, "Регистратор новых датчиков", "Go", "Активирует датчики и привязывает к пользователям")
+   Component(MainSystemRegistrationController, "Регистратор новых камер", "Go", "Активирует камеры и привязывает к пользователям")
+   Component(MainSystemCameraController, "Обработчик команд камер", "Go", "Взаимодействует с видео-сервером")
+
+  }
+  Container(SensorGate, "Шлюз взаимодействия с датчиками", "Go", "Управляет сообщениями датчиков"){
+    Component(KafkaConnector, "Коннектор Kafka", "Go", "Обрабатывает сообщения")
+    Component(SensorAPIController, "Модуль взаимодействия с датчиками", "Go", "Стандартизирует взаимодействие с датчиками")
+    Component(SensorSecurityGateway, "Модуль сетевой безопасности", "Go", "Организует безопасное взаимодействие")
+  }
+  ContainerDb(Database, "СУБД", "PostgreSQL", "Хранит профили, привязанные устройства, телеметрию")
+  Container(VideoStreaming, "Видео-сервер", "Python", "Взаимодействует с видекамерами и медиафайлами"){
+    Component(CameraAPIController, "Модуль взаимодействия с камерами", "Go", "Стандартизирует взаимодействие с камерами")
+    Component(CameraSavingController, "Модуль медиафайлов", "Go", "Организует доступ к записанным видео, фото")
+    Component(CameraSecurityGateway, "Модуль сетевой безопасности", "Go", "Организует безопасное взаимодействие")
+  }
+  ContainerDb(S3, "Хранилище данных видеокамер", "S3", "Хранит видео и фото")
+  ContainerQueue(Queue, "Очередь сообщений", "Kafka", "Обрабатывает сообщения датчиков")
+}
+
+Container_Ext(temperatureSensor, "Датчик температуры", "Регулирование температуры")
+
+Container_Ext(gateSensor,"Датчик ворот", "Подъем/закрытие ворот")
+Container_Ext(videoCamera,"Видеокамера", "Включение/запись/выключение")
+Container_Ext(lightSensor,"Датчик света", "Включение/отключение света")
+
+Rel(user, WebApp, "https")
+Rel(user, MobileApp, "https")
+Rel(WebApp, MainSystemAppsController, "https")
+Rel(MobileApp, MainSystemAppsController, "https")
+Rel(MainSystemAppsController, MainSystemMainController, "syscall")
+Rel(MainSystemMainController, MainSystemDBController, "syscall")
+Rel(MainSystemMainController, MainSystemUserController, "syscall")
+Rel(MainSystemMainController, MainSystemSensorController, "syscall")
+Rel(MainSystemSensorController, MainSystemSensorRegistrator, "syscall")
+Rel(MainSystemMainController, MainSystemCameraController, "syscall")
+Rel(MainSystemCameraController, MainSystemRegistrationController, "syscall")
+
+
+Rel(MainSystemSensorController, Queue, "TCP/TLS")
+Rel(Queue, KafkaConnector, "TCP")
+Rel(KafkaConnector, SensorAPIController, "syscall")
+
+
+Rel(MainSystemDBController, Database, "TCP/TLS")
+Rel(SensorSecurityGateway, gateSensor, "http")
+Rel(SensorSecurityGateway, temperatureSensor, "http")
+Rel(SensorSecurityGateway, lightSensor, "http")
+
+Rel(MainSystemCameraController, CameraAPIController, "TCP/TLS")
+Rel(MainSystemCameraController, CameraSavingController, "TCP/TLS")
+
+Rel(CameraSavingController, S3, "HTTP/HTTPS")
+
+Rel(CameraAPIController, CameraSavingController, "syscall")
+Rel(CameraSecurityGateway, videoCamera, "http")
+Rel(CameraAPIController, CameraSecurityGateway, "syscall")
+Rel(SensorAPIController, SensorSecurityGateway, "syscall")
+
+
+
+@enduml
