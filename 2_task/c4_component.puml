@@ -77,6 +77,9 @@ Rel(CameraSecurityGateway, videoCamera, "http")
 Rel(CameraAPIController, CameraSecurityGateway, "syscall")
 Rel(SensorAPIController, SensorSecurityGateway, "syscall")
 
-
+System(house, "Дом", "Место установки")
+Rel(gateSensor, house, "")
+Rel(temperatureSensor, house, "")
+Rel(lightSensor, house, "")
 
 @enduml

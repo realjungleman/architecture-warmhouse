@@ -40,4 +40,9 @@ Rel(ApiGate, gateSensor, "http")
 Rel(ApiGate, temperatureSensor, "http")
 Rel(ApiGate, lightSensor, "http")
 
+
+System(house, "Дом", "Место установки")
+Rel(gateSensor, house, "")
+Rel(temperatureSensor, house, "")
+Rel(lightSensor, house, "")
 @enduml

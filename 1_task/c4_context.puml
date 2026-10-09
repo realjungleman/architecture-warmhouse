@@ -9,7 +9,9 @@ Person(user, "Пользователь", "Клиент")
 
 System(MainSystem, "Монолит", "Управление взаимодействием с датчиками")
 SystemQueue(Sensor, "Датчик", "Замер температуры")
+System(House, "Дом", "Место установки датчика")
 
 Rel(user, MainSystem, "Регулирование температуры")
 Rel(Sensor, MainSystem, "Обработка команд")
+Rel(House, Sensor, "Определяет место установки")
 @enduml
