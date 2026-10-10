@@ -13,7 +13,7 @@ tags:
   - name: user
     description: Создание, редактирование, изменение прав
 paths:
-  /deviceAdd:
+  /device/add:
     post:
       tags:
         - device
@@ -21,11 +21,9 @@ paths:
       description: Активация при первичной настройке.
       operationId: addDevice
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/device'
               properties:
                 serialNumber:
                   type: string
@@ -51,8 +49,8 @@ paths:
     get:
       tags:
         - device
-      summary: Find device by identifier.
-      description: Returns a single device.
+      summary: Получить устройство по идентификатору
+      description: Возвращает информацию о устройстве
       operationId: getDeviceById
       parameters:
         - name: deviceId
@@ -69,9 +67,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/device'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/device'
         '400':
           description: Invalid ID supplied
         '404':
@@ -83,8 +78,8 @@ paths:
     get:
       tags:
         - device
-      summary: Get device status.
-      description: Returns status of device - enabled/disabled.
+      summary: Получить текущий статус устройства
+      description: Включено/выключено
       operationId: getDeviceStatusById
       parameters:
         - name: deviceId
@@ -100,10 +95,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/device'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/device'
+                $ref: '#/components/schemas/deviceStatus'
         '400':
           description: Invalid ID supplied
         '404':
@@ -114,9 +106,97 @@ paths:
       security:
         - api_key: [ ]
 
+  /device/{deviceId}/runCommand:
+    post:
+      tags:
+        - device
+      summary: Отправка команды на устройство
+      description: Выполнение команды
+      operationId: runCommand
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: integer
+                command:
+                  type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceCommand'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+
+  /user/{userId}:
+    get:
+      tags:
+        - user
+      summary: Получить устройство по идентификатору
+      description: Возвращает информацию о пользователе
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: user not found
+        default:
+          description: Unexpected error
+
+  /house/{houseId}:
+    get:
+      tags:
+        - house
+      summary: Получить информацию о доме по идентификатору
+      description: Возвращает информацию о доме
+      operationId: getHouseById
+      parameters:
+        - name: houseId
+          in: path
+          description: ID of house to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/house'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: house not found
+        default:
+          description: Unexpected error
+
 components:
   schemas:
-    User:
+    user:
       type: object
       properties:
         id:
@@ -138,22 +218,7 @@ components:
         isDeleted:
           type: boolean
           examples: [ false ]
-    House:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          examples: [ 10 ]
-        name:
-          type: string
-          examples: [ Ivanov Ivan Ivanovich's house ]
-        location:
-          type: string
-          examples: [ '55.703056, 37.530278' ]
-        isActive:
-          type: boolean
-          examples: [ true ]
+
     deviceType:
       required:
         - id
@@ -211,22 +276,39 @@ components:
           enum:
             - enabled
             - disabled
-  requestBodies:
-    device:
-      description: device object that needs to be added to the store
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/device'
-        application/xml:
-          schema:
-            $ref: '#/components/schemas/device'
-    UserArray:
-      description: List of user object
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/User'
-
+    deviceCommand:
+      required:
+        - deviceId
+        - command
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          examples: [ 10 ]
+        status:
+          type: string
+          description: command run status
+          enum:
+            - success
+            - failed
+        error_msg:
+          type: string
+          description: error message if exists
+          examples: ['NULL','Device not exists']
+    house:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          examples: [ 10 ]
+        name:
+          type: string
+          examples: [ Ivanov Ivan Ivanovich's house ]
+        location:
+          type: string
+          examples: [ '55.703056, 37.530278' ]
+        isActive:
+          type: boolean
+          examples: [ true ]
