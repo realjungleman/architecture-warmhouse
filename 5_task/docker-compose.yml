@@ -28,7 +28,6 @@ services:
     networks:
       - smarthome-network
 
-
   app:
     build:
       context: ./app/smart_home
