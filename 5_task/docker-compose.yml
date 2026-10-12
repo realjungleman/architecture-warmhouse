@@ -50,6 +50,7 @@ services:
 volumes:
     postgres-data:
 
+
 networks:
   smarthome-network:
     driver: bridge
