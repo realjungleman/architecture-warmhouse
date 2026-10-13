@@ -1,0 +1,17 @@
+@startuml
+title Умный дом. С4 уровень контекста
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Клиент")
+
+System(MainSystem, "Монолит", "Управление взаимодействием с датчиками")
+SystemQueue(Sensor, "Датчик", "Замер температуры")
+System(House, "Дом", "Место установки датчика")
+
+Rel(user, MainSystem, "Регулирование температуры")
+Rel(Sensor, MainSystem, "Обработка команд")
+Rel(House, Sensor, "Определяет место установки")
+@enduml
